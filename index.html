@@ -1,0 +1,102 @@
+<!--
+Visualization project 2..
+Decimate the data by random/stratified sampling, then find the intrinsic dimensionality and then plot vaious line graphs and scatter plot of outputs.
+
+Data : European Soccer Database
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mini Project 2</title>
+
+  <script type="text/javascript" src="lib/d3.v3.min.js"></script>
+
+  <style type="text/css">
+    path {
+      stroke: Green;
+      stroke-width: 2;
+      fill: none;
+    }
+    legend,h1 {
+      font-family: sans-serif;
+      font-size: 16px;
+    }
+    #graph .axis path, #graph .axis line {
+      fill: none;
+      stroke: #000;
+    }
+    button {
+      display: inline-block;
+      margin: 0 3px 0 0;
+      padding: 5px 15px;
+      font-size: 16px;
+      font-family: "Bitter",serif;
+      line-height: 1.3;
+      border-radius: 0;
+    }
+    .tooltip {
+      position: absolute;
+      width: 200px;
+      height: 28px;
+      pointer-events: none;
+    }
+
+    /*for pca3 graph*/
+    #pca3 {
+      font: 10px sans-serif;
+      padding: 10px;
+    }
+
+    #pca3 .axis,
+    #pca3 .frame {
+      shape-rendering: crispEdges;
+    }
+
+    #pca3 .axis line {
+      stroke: #ddd;
+    }
+
+    #pca3 .axis path {
+      display: none;
+    }
+
+    #pca3 .cell text {
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+
+    #pca3 .frame {
+      fill: none;
+      stroke: #aaa;
+    }
+
+    #pca3 circle {
+      fill-opacity: .7;
+    }
+  </style>
+
+  <script src="src/graphs.js"></script>
+</head>
+
+<body>
+  <fieldset>
+    <legend>Visualization : Mini Project 2</legend>
+
+    <h1>Player Attributes for European Professional Football</h1>
+
+    <button id="kmean" onclick="kmean_plot()">Elbow for K-mean</button>
+    <button id="scree_eigen" onclick="eigen_plot()">Eigen value plot (Intrin. Dimen.)</button>
+    <button id="scree_loadings" onclick="loading_plot()"">Scree plot of Loadings</button>
+    <button id="pca2" onclick="scatter_plot('pca2.csv')">PCA 2</button>
+    <button id="mds_euclidean" onclick="scatter_plot('mds_euclidean.csv')">MDS (Euclidean)</button>
+    <button id="mds_correlation" onclick="scatter_plot('mds_correlation.csv')">MDS (Correlation)</button>
+    <button id="pca3_button" onclick="pca3()">PCA 3</button>
+
+    <div id="pca3"></div>
+    <div id="graph"></div>
+
+  </fieldset>
+</body>
+</html>
