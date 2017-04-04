@@ -95,11 +95,11 @@ function scatter_plot(file_name) {
     });
 }
 
-function pca3() {
+function pca3(file_name) {
     document.getElementById("pca3").innerHTML = '';
     document.getElementById("graph").innerHTML = '';
 
-    var file_name = "./data/processed/pca3.csv";
+    var file_name = "./data/processed/"+file_name;
     var color = ['Green','Red']
 
     var width = 650,

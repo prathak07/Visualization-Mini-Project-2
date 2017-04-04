@@ -104,12 +104,15 @@ def data_pca(df1,df2):
         tup_list.append((col_names[i],sq_sum_1[col_names[i]],sq_sum_2[col_names[i]]))
     tup_list = sorted(tup_list, key=lambda x:-1*x[2])
     print "Top 3 PCA Loadings: "+tup_list[0][0]+", "+tup_list[1][0]+' and '+tup_list[2][0]
+    top3_col_list = []
+    for i in range(3):
+        top3_col_list.append(tup_list[i][0])
     file_name = directory+'scree_loadings.csv'
     print "Creating file "+file_name
     tupDF = pandas.DataFrame(tup_list)
     tupDF.columns = ['variable','col1','col2']
     tupDF.to_csv(file_name,sep=',',index=False)
-    return tup_list,eigen_values_1,eigen_values_2
+    return top3_col_list
 
 
 def find_pca2(df1,df2,file_name):
@@ -172,7 +175,7 @@ def find_MDS_correlation(df1,df2,file_name):
     sample.to_csv(file_name,sep=',',index=False)
 
 
-def find_pca3(df1,df2,file_name):
+def find_pca3(df1,df2,file_name,col_list):
     print "PCA 3 started"
     pca = PCA(n_components=3)
     random_sample = pandas.DataFrame(pca.fit_transform(df1))
@@ -188,6 +191,20 @@ def find_pca3(df1,df2,file_name):
     file_name = directory + file_name
     print "Creating file "+file_name
     sample.to_csv(file_name,sep=',',index=False)
+    random_tuple = []
+    for i in range(len(df1)):
+        random_tuple.append((df1[col_list[0]].iloc[i],df1[col_list[1]].iloc[i],df1[col_list[2]].iloc[i],'1'))
+    random_tuple_df = pandas.DataFrame(random_tuple)
+    random_tuple_df.columns = [col_list[0],col_list[1],col_list[2],'type']
+    stratified_tuple = []
+    for i in range(len(df2)):
+        stratified_tuple.append((df2[col_list[0]].iloc[i],df2[col_list[1]].iloc[i],df2[col_list[2]].iloc[i],'2'))
+    stratified_tuple_df = pandas.DataFrame(stratified_tuple)
+    stratified_tuple_df.columns = [col_list[0],col_list[1],col_list[2],'type']
+    sample = pandas.concat([random_tuple_df, stratified_tuple_df], axis=0)
+    file_name = directory + 'pca3_loadings.csv'
+    print "Creating file "+file_name
+    sample.to_csv(file_name,sep=',',index=False)
 
 
 def main(filename):
@@ -198,11 +215,11 @@ def main(filename):
     find_k_for_kmean(data_frame)
     # found the elbow at 3 thus, number of clusters to be created are 3
     stratified_sample = stratified_sampling(data_frame,3,0.05)
-    data_pca(random_sample,stratified_sample)
+    col_list = data_pca(random_sample,stratified_sample)
     find_pca2(random_sample,stratified_sample,'pca2.csv')
     find_MDS_euclidean(random_sample,stratified_sample,'mds_euclidean.csv')
     find_MDS_correlation(random_sample,stratified_sample,'mds_correlation.csv')
-    find_pca3(random_sample,stratified_sample,'pca3.csv')
+    find_pca3(random_sample,stratified_sample,'pca3.csv',col_list)
 
 
 if __name__=='__main__':
